@@ -21,9 +21,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void durationChanged(quint64 duration);
-
-    void positionChanged(quint64 progress);
 
     void on_actionOpen_triggered();
 
@@ -37,17 +34,24 @@ private slots:
 
     void on_horizontalSlider_Volume_valueChanged(int value);
 
-    void on_pushButton_Seek_Backward_clicked();
+    void on_actionOpen_folder_triggered();
 
     void on_pushButton_Seek_Forward_clicked();
+
+    void on_pushButton_Seek_Backward_clicked();
 
 private:
     Ui::MainWindow* ui;
     QMediaPlayer* Player;
     QVideoWidget* Video;
-    qint64 mDuration;
     bool is_Pause = true;
     bool is_Muted = false;
+
+    QProgressBar* Bar;
+    QSlider* Slider;
+    QMediaPlaylist * Playlist;
+    QDir m_musicPath;
+    QVariantList _music;
 
     void updateDuration(quint64 duration);
 };

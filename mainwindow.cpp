@@ -22,9 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     Player->setVolume(ui->horizontalSlider_Volume->value());
 
-    //connect(Player, &QMediaPlayer::durationChanged, this, &MainWindow::durationChanged);
-    //connect(Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
-    ui->horizontalSlider_Duration->setRange(0, Player->duration()/1000);
+    Playlist = new QMediaPlaylist(Player);
+
+    Slider = new QSlider(this);
+    Bar = new QProgressBar(this);
+
+    Slider->setOrientation(Qt::Horizontal);
+    ui->statusbar->addPermanentWidget(Slider);
+    ui->statusbar->addPermanentWidget(Bar);
+
+    connect(Player, &QMediaPlayer::durationChanged, Slider, &QSlider::setMaximum);
+    connect(Player, &QMediaPlayer::positionChanged, Slider, &QSlider::setValue);
+    connect(Slider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);
+
+    connect(Player, &QMediaPlayer::durationChanged, Bar, &QProgressBar::setMaximum);
+    connect(Player, &QMediaPlayer::positionChanged, Bar, &QProgressBar::setValue);
 }
 
 MainWindow::~MainWindow()
@@ -32,46 +44,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::durationChanged(quint64 duration)
-{
-   mDuration = duration/1000;
-   ui->horizontalSlider_Duration->setMaximum(mDuration);
-}
-
-void MainWindow::positionChanged(quint64 progress)
-{
-    if(!ui->horizontalSlider_Duration->isSliderDown())
-    {
-        ui->horizontalSlider_Duration->setValue(progress/1000);
-    }
-    updateDuration(progress/1000);
-}
-
-void MainWindow::updateDuration(quint64 duration)
-{
-    if(duration || mDuration)
-    {
-        QTime CurrentTime((duration/3600)%60, (duration/60)%60, duration%60, (duration*1000)%1000);
-        QTime TotalTime((mDuration/3600)%60, (mDuration/60)%60, mDuration%60, (mDuration*1000)%1000);
-        QString format = "mm:ss";
-        if(mDuration > 3600)
-        {
-            format = "hh:mm:ss";
-        }
-        ui->label_current_Time->setText(CurrentTime.toString(format));
-        ui->label_Total_Time->setText(TotalTime.toString(format));
-    }
-}
-
 void MainWindow::on_actionOpen_triggered()
 {
     QString File_Name = QFileDialog::getOpenFileName(this, tr("Select Video File"), "", tr("MP4 Files (*.mp4)")); // plays mp3 too
-    ui->label->setText(File_Name);
+    //ui->label->setText(File_Name);
     Video = new QVideoWidget();
     Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
     Video->setParent(ui->groupBox_Video);
     Player->setVideoOutput(Video);
-    Player->setMedia(QUrl(File_Name));
+    #ifdef _WIN32
+        Player->setMedia(QUrl(File_Name));
+    #elif __linux__
+        Player->setMedia(QUrl("file:"%File_Name));
+    #endif
     Video->setVisible(true);
     Video->show();
 }
@@ -100,6 +85,8 @@ void MainWindow::on_pushButton_Play_Pause_clicked()
 void MainWindow::on_pushButton_Stop_clicked()
 {
     Player->stop();
+    is_Pause = true;
+    ui->pushButton_Play_Pause->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 }
 
 void MainWindow::on_pushButton_Volume_clicked()
@@ -125,16 +112,31 @@ void MainWindow::on_horizontalSlider_Volume_valueChanged(int value)
 }
 
 
-void MainWindow::on_pushButton_Seek_Backward_clicked()
+void MainWindow::on_actionOpen_folder_triggered()
 {
-    ui->horizontalSlider_Duration->setValue(ui->horizontalSlider_Duration->value()-20);
-    Player->setPosition(ui->horizontalSlider_Duration->value()*1000);
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Video File(*.*)");
+    for(const QString & filename: filenames){
+        Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(filename)));
+    }
+
+    Video = new QVideoWidget();
+    Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
+    Video->setParent(ui->groupBox_Video);
+    Player->setVideoOutput(Video);
+    Player->setPlaylist(Playlist);
+    Video->setVisible(true);
+    Video->show();
 }
 
 
 void MainWindow::on_pushButton_Seek_Forward_clicked()
 {
-    ui->horizontalSlider_Duration->setValue(ui->horizontalSlider_Duration->value()+20);
-    Player->setPosition(ui->horizontalSlider_Duration->value()*1000);
+    Playlist->next();
+}
+
+
+void MainWindow::on_pushButton_Seek_Backward_clicked()
+{
+    Playlist->previous();
 }
 
