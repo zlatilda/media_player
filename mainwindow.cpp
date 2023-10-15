@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(Player, &QMediaPlayer::durationChanged, Bar, &QProgressBar::setMaximum);
     connect(Player, &QMediaPlayer::positionChanged, Bar, &QProgressBar::setValue);
+
+    //connect(Player, &QMediaPlayer::currentMediaChanged, ui->play_list, &ui->play_list->currentItem());
+
 }
 
 MainWindow::~MainWindow()
@@ -44,10 +47,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_video_triggered()
 {
-    QString File_Name = QFileDialog::getOpenFileName(this, tr("Select Video File"), "", tr("MP4 Files (*.mp4)")); // plays mp3 too
-    //ui->label->setText(File_Name);
+    /*QString File_Name = QFileDialog::getOpenFileName(this, tr("Select Video File"), "", tr("MP4 Files (*.mp4)"));
+
     Video = new QVideoWidget();
     Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
     Video->setParent(ui->groupBox_Video);
@@ -58,7 +61,30 @@ void MainWindow::on_actionOpen_triggered()
         Player->setMedia(QUrl("file:"%File_Name));
     #endif
     Video->setVisible(true);
+        Video->show();*/
+
+    Playlist->clear();
+    ui->play_list->clear();
+    Play_list_index = 0;
+    Play_list_size = 0;
+    QFileInfo* fi;
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Video File(*.mp4)");
+    for(const QString & filename: filenames){
+        Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(filename)));
+        fi = new QFileInfo(QUrl::fromLocalFile(filename).toString());
+        ui->play_list->addItem(fi->fileName());
+        Play_list_size++;
+    }
+
+    Video = new QVideoWidget();
+    Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
+    Video->setParent(ui->groupBox_Video);
+    Player->setVideoOutput(Video);
+    Player->setPlaylist(Playlist);
+    Video->setVisible(true);
     Video->show();
+
+    ui->play_list->item(Play_list_index)->setSelected(true);
 }
 
 void MainWindow::on_horizontalSlider_Duration_valueChanged(int value)
@@ -112,31 +138,49 @@ void MainWindow::on_horizontalSlider_Volume_valueChanged(int value)
 }
 
 
-void MainWindow::on_actionOpen_folder_triggered()
-{
-    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Video File(*.*)");
+void MainWindow::on_actionOpen_music_triggered()
+{   
+    Playlist->clear();
+    ui->play_list->clear();
+    Play_list_index = 0;
+    Play_list_size = 0;
+    QFileInfo* fi;
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Video File(*.mp3)");
     for(const QString & filename: filenames){
         Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(filename)));
+        fi = new QFileInfo(QUrl::fromLocalFile(filename).toString());
+        ui->play_list->addItem(fi->fileName());
+        Play_list_size++;
     }
 
-    Video = new QVideoWidget();
-    Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
-    Video->setParent(ui->groupBox_Video);
-    Player->setVideoOutput(Video);
+    Audio = new QAudioOutput();
     Player->setPlaylist(Playlist);
-    Video->setVisible(true);
-    Video->show();
-}
 
+    ui->play_list->item(Play_list_index)->setSelected(true);
+}
 
 void MainWindow::on_pushButton_Seek_Forward_clicked()
 {
     Playlist->next();
+
+    Play_list_index = (Play_list_index+1) % Play_list_size;
+    ui->play_list->item(Play_list_index)->setSelected(true);
 }
 
 
 void MainWindow::on_pushButton_Seek_Backward_clicked()
 {
     Playlist->previous();
+
+    if(Play_list_index-1 >= 0)
+        Play_list_index--;
+
+    ui->play_list->item(Play_list_index)->setSelected(true);
+}
+
+
+void MainWindow::on_actionManage_libraries_triggered()
+{
+
 }
 

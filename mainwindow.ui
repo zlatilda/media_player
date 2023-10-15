@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>614</width>
+    <width>863</width>
     <height>452</height>
    </rect>
   </property>
@@ -111,6 +111,42 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QListWidget" name="play_list">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>20</y>
+      <width>231</width>
+      <height>301</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>0</y>
+      <width>231</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current playlist</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="current">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>350</y>
+      <width>231</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -118,7 +154,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>614</width>
+     <width>863</width>
      <height>21</height>
     </rect>
    </property>
@@ -126,19 +162,19 @@
     <property name="title">
      <string>Select file</string>
     </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionOpen_folder"/>
+    <addaction name="actionOpen_video"/>
+    <addaction name="actionOpen_music"/>
    </widget>
    <addaction name="menuSelect_file"/>
   </widget>
-  <action name="actionOpen">
+  <action name="actionOpen_video">
    <property name="text">
-    <string>Open</string>
+    <string>Open video</string>
    </property>
   </action>
-  <action name="actionOpen_folder">
+  <action name="actionOpen_music">
    <property name="text">
-    <string>Open  folder</string>
+    <string>Open  music</string>
    </property>
   </action>
  </widget>
