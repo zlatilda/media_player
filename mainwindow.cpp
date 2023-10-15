@@ -24,21 +24,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     Playlist = new QMediaPlaylist(Player);
 
-    Slider = new QSlider(this);
-    Bar = new QProgressBar(this);
+    //Slider = new QSlider(this);
+    //Bar = new QProgressBar(this);
 
-    Slider->setOrientation(Qt::Horizontal);
-    ui->statusbar->addPermanentWidget(Slider);
-    ui->statusbar->addPermanentWidget(Bar);
+    //Slider->setOrientation(Qt::Horizontal);
 
-    connect(Player, &QMediaPlayer::durationChanged, Slider, &QSlider::setMaximum);
+    //ui->statusbar->addPermanentWidget(Slider);
+    //ui->statusbar->addPermanentWidget(Bar);
+
+    /*connect(Player, &QMediaPlayer::durationChanged, Slider, &QSlider::setMaximum);
     connect(Player, &QMediaPlayer::positionChanged, Slider, &QSlider::setValue);
-    connect(Slider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);
+    connect(Slider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);*/
 
-    connect(Player, &QMediaPlayer::durationChanged, Bar, &QProgressBar::setMaximum);
-    connect(Player, &QMediaPlayer::positionChanged, Bar, &QProgressBar::setValue);
+    connect(Player, &QMediaPlayer::durationChanged, ui->horizontalSlider, &QSlider::setMaximum);
+    connect(Player, &QMediaPlayer::positionChanged, ui->horizontalSlider, &QSlider::setValue);
+    connect(ui->horizontalSlider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);
 
-    //connect(Player, &QMediaPlayer::currentMediaChanged, ui->play_list, &ui->play_list->currentItem());
+    //connect(Player, &QMediaPlayer::durationChanged, Bar, &QProgressBar::setMaximum);
+    //connect(Player, &QMediaPlayer::positionChanged, Bar, &QProgressBar::setValue);
 
 }
 
@@ -170,10 +173,12 @@ void MainWindow::on_pushButton_Seek_Forward_clicked()
 
 void MainWindow::on_pushButton_Seek_Backward_clicked()
 {
-    Playlist->previous();
 
     if(Play_list_index-1 >= 0)
+    {
+        Playlist->previous();
         Play_list_index--;
+    }
 
     ui->play_list->item(Play_list_index)->setSelected(true);
 }

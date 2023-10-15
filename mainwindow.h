@@ -52,8 +52,8 @@ private:
     bool is_Pause = true;
     bool is_Muted = false;
 
-    QProgressBar* Bar;
-    QSlider* Slider;
+    //QProgressBar* Bar;
+    //QSlider* Slider;
     QMediaPlaylist * Playlist;
     QDir m_musicPath;
     QVariantList _music;
