@@ -9,6 +9,15 @@
 #include <QtWidgets>
 #include <QtGui>
 #include <QMediaMetaData>
+#include <QtSql/QSql>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlQuery>
+#include <QSqlQueryModel>
+#include <QtDebug>
+#include <QSqlError>
+#include <QFileInfo>
+#include "new_library.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -42,7 +51,11 @@ private slots:
 
     void on_pushButton_Seek_Backward_clicked();
 
-    void on_actionManage_libraries_triggered();
+    void on_Add_media_clicked();
+
+    void onTableClicked(const QModelIndex &index);
+
+    void on_Add_library_clicked();
 
 private:
     Ui::MainWindow* ui;
@@ -51,15 +64,18 @@ private:
     QAudioOutput* Audio;
     bool is_Pause = true;
     bool is_Muted = false;
-
-    //QProgressBar* Bar;
-    //QSlider* Slider;
     QMediaPlaylist * Playlist;
     QDir m_musicPath;
     QVariantList _music;
     int Play_list_index;
     int Play_list_size;
+    QSqlDatabase media_libs;
+    QModelIndex media_lib_index;
+    New_library *new_lib_window;
 
     void updateDuration(quint64 duration);
+    void onCurrentMusicIndexChanged();
+    void show_media_libs();
+    void show_media_in_curr_lib(QString cellText);
 };
 #endif // MAINWINDOW_H

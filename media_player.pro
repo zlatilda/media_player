@@ -1,4 +1,4 @@
-QT       += core gui multimedia multimediawidgets
+QT       += core gui multimedia multimediawidgets sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,13 +10,16 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    new_library.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    new_library.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    new_library.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

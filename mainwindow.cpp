@@ -8,6 +8,21 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QDir databasePath;
+    QString path = databasePath.currentPath()+"/media_libs.db";
+    media_libs = QSqlDatabase::addDatabase("QSQLITE");
+    media_libs.setDatabaseName(path);
+    QSqlQuery qry;
+    if(media_libs.open())
+    {
+        qry.prepare("create table media(id integer primary key, path text, name text, lib_name text)");
+        qry.exec();
+    }
+
+    show_media_libs();
+
+    ui->Add_media->setEnabled(false);
+
     Player = new QMediaPlayer();
 
     ui->pushButton_Play_Pause->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -24,30 +39,34 @@ MainWindow::MainWindow(QWidget *parent)
 
     Playlist = new QMediaPlaylist(Player);
 
-    //Slider = new QSlider(this);
-    //Bar = new QProgressBar(this);
-
-    //Slider->setOrientation(Qt::Horizontal);
-
-    //ui->statusbar->addPermanentWidget(Slider);
-    //ui->statusbar->addPermanentWidget(Bar);
-
-    /*connect(Player, &QMediaPlayer::durationChanged, Slider, &QSlider::setMaximum);
-    connect(Player, &QMediaPlayer::positionChanged, Slider, &QSlider::setValue);
-    connect(Slider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);*/
-
     connect(Player, &QMediaPlayer::durationChanged, ui->horizontalSlider, &QSlider::setMaximum);
     connect(Player, &QMediaPlayer::positionChanged, ui->horizontalSlider, &QSlider::setValue);
     connect(ui->horizontalSlider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);
 
-    //connect(Player, &QMediaPlayer::durationChanged, Bar, &QProgressBar::setMaximum);
-    //connect(Player, &QMediaPlayer::positionChanged, Bar, &QProgressBar::setValue);
+    connect(Player, &QMediaPlayer::currentMediaChanged, this, &MainWindow::onCurrentMusicIndexChanged);
+    connect(ui->media_libs, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onTableClicked(const QModelIndex &)));
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::onTableClicked(const QModelIndex &index)
+{
+    if (index.isValid()) {
+        media_lib_index = index;
+        QString cellText = index.data().toString();
+        show_media_in_curr_lib(cellText);
+        ui->Add_media->setEnabled(true);
+    }
+}
+
+void MainWindow::onCurrentMusicIndexChanged()
+{
+    if(Playlist->currentIndex() <= Playlist->mediaCount())
+        ui->play_list->item(Playlist->currentIndex())->setSelected(true);
 }
 
 void MainWindow::on_actionOpen_video_triggered()
@@ -148,7 +167,7 @@ void MainWindow::on_actionOpen_music_triggered()
     Play_list_index = 0;
     Play_list_size = 0;
     QFileInfo* fi;
-    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Video File(*.mp3)");
+    QStringList filenames = QFileDialog::getOpenFileNames(this, "Open a File","","Music File(*.mp3)");
     for(const QString & filename: filenames){
         Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(filename)));
         fi = new QFileInfo(QUrl::fromLocalFile(filename).toString());
@@ -167,25 +186,91 @@ void MainWindow::on_pushButton_Seek_Forward_clicked()
     Playlist->next();
 
     Play_list_index = (Play_list_index+1) % Play_list_size;
-    ui->play_list->item(Play_list_index)->setSelected(true);
+    //ui->play_list->item(Play_list_index)->setSelected(true);
+    ui->play_list->item(Playlist->currentIndex())->setSelected(true);
+    std::cout << Playlist->currentIndex() << " " << Playlist->mediaCount();
 }
 
 
 void MainWindow::on_pushButton_Seek_Backward_clicked()
 {
 
-    if(Play_list_index-1 >= 0)
+    /*if(Play_list_index-1 >= 0)
     {
         Playlist->previous();
         Play_list_index--;
     }
 
-    ui->play_list->item(Play_list_index)->setSelected(true);
+    ui->play_list->item(Play_list_index)->setSelected(true);*/
+    Playlist->previous();
+    ui->play_list->item(Playlist->currentIndex())->setSelected(true);
 }
 
-
-void MainWindow::on_actionManage_libraries_triggered()
+void MainWindow::on_Add_media_clicked()
 {
+    QFileInfo* fi;
+    QString lib_name;
+    if (media_lib_index.isValid())
+        lib_name = media_lib_index.data().toString();
 
+    QString path = QFileDialog::getOpenFileName(this, "Open a File","","Music or Video File(*.*)");
+    QString id = QString::number(rand());
+    fi = new QFileInfo(QUrl::fromLocalFile(path).toString());
+    QString name = fi->fileName();
+
+    QSqlQuery qry;
+    if(media_libs.open())
+    {
+        qry.prepare("insert into media(id, path, name, lib_name) values(:id, :path, :name, :lib_name)");
+        qry.bindValue(":id", id);
+        qry.bindValue(":path", path);
+        qry.bindValue(":name", name);
+        qry.bindValue(":lib_name", lib_name);
+        qry.exec();
+    }
+
+    media_libs.close();
+    show_media_in_curr_lib(lib_name);
+}
+
+void MainWindow::show_media_libs()
+{
+    media_libs.open();
+    QSqlQuery qry;
+    QSqlQueryModel* modal = new QSqlQueryModel();
+    qry.prepare("select distinct lib_name from media");
+    qry.exec();
+
+    modal->setQuery(qry);
+
+    ui->media_libs->setModel(modal);
+
+    media_libs.close();
+}
+
+void MainWindow::show_media_in_curr_lib(QString cellText)
+{
+    media_libs.open();
+    QSqlQuery qry;
+    QSqlQueryModel* modal = new QSqlQueryModel();
+    qry.prepare("select name from media where lib_name = :lbnm");
+    qry.bindValue(":lbnm", cellText);
+    qry.exec();
+
+    modal->setQuery(qry);
+
+    ui->media_in_current_lib->setModel(modal);
+
+    media_libs.close();
+}
+
+void MainWindow::on_Add_library_clicked()
+{
+    QString lib_name;
+    new_lib_window = new New_library();
+    new_lib_window->show();
+    lib_name = new_lib_window->get_input_text();
+    ui->label->setText(lib_name);
+    qDebug()<< new_lib_window->get_input_text();
 }
 
