@@ -17,7 +17,7 @@
 #include <QtDebug>
 #include <QSqlError>
 #include <QFileInfo>
-#include "new_library.h"
+#include <string>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -57,6 +57,10 @@ private slots:
 
     void on_Add_library_clicked();
 
+    void on_save_new_lib_clicked();
+
+    void on_new_lib_add_cancel_clicked();
+
 private:
     Ui::MainWindow* ui;
     QMediaPlayer* Player;
@@ -71,11 +75,11 @@ private:
     int Play_list_size;
     QSqlDatabase media_libs;
     QModelIndex media_lib_index;
-    New_library *new_lib_window;
 
     void updateDuration(quint64 duration);
     void onCurrentMusicIndexChanged();
     void show_media_libs();
     void show_media_in_curr_lib(QString cellText);
+    void add_from_lib_to_playlist();
 };
 #endif // MAINWINDOW_H
