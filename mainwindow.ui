@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>905</width>
+    <width>930</width>
     <height>525</height>
    </rect>
   </property>
@@ -129,12 +129,12 @@
      <rect>
       <x>620</x>
       <y>10</y>
-      <width>271</width>
+      <width>291</width>
       <height>441</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -145,7 +145,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>271</width>
+        <width>291</width>
         <height>421</height>
        </rect>
       </property>
@@ -160,12 +160,12 @@
        <rect>
         <x>0</x>
         <y>180</y>
-        <width>271</width>
+        <width>291</width>
         <height>201</height>
        </rect>
       </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>250</number>
+       <number>270</number>
       </attribute>
      </widget>
      <widget class="QTableView" name="media_libs">
@@ -173,12 +173,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>271</width>
+        <width>291</width>
         <height>141</height>
        </rect>
       </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>250</number>
+       <number>270</number>
       </attribute>
      </widget>
      <widget class="QPushButton" name="Add_library">
@@ -186,7 +186,7 @@
        <rect>
         <x>0</x>
         <y>150</y>
-        <width>261</width>
+        <width>281</width>
         <height>23</height>
        </rect>
       </property>
@@ -199,7 +199,7 @@
        <rect>
         <x>0</x>
         <y>390</y>
-        <width>261</width>
+        <width>281</width>
         <height>23</height>
        </rect>
       </property>
@@ -212,7 +212,7 @@
        <rect>
         <x>0</x>
         <y>140</y>
-        <width>161</width>
+        <width>181</width>
         <height>31</height>
        </rect>
       </property>
@@ -220,7 +220,7 @@
      <widget class="QPushButton" name="save_new_lib">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>180</x>
         <y>140</y>
         <width>51</width>
         <height>31</height>
@@ -233,7 +233,7 @@
      <widget class="QPushButton" name="new_lib_add_cancel">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>230</x>
         <y>140</y>
         <width>51</width>
         <height>31</height>
@@ -242,6 +242,24 @@
       <property name="text">
        <string/>
       </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Available media</string>
+     </attribute>
+     <widget class="QTableView" name="available_media">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>291</width>
+        <height>421</height>
+       </rect>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>260</number>
+      </attribute>
      </widget>
     </widget>
    </widget>
@@ -265,7 +283,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>905</width>
+     <width>930</width>
      <height>21</height>
     </rect>
    </property>

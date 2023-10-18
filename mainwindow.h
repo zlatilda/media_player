@@ -75,11 +75,13 @@ private:
     int Play_list_size;
     QSqlDatabase media_libs;
     QModelIndex media_lib_index;
+    QModelIndex media_index;
 
     void updateDuration(quint64 duration);
     void onCurrentMusicIndexChanged();
     void show_media_libs();
     void show_media_in_curr_lib(QString cellText);
     void add_from_lib_to_playlist();
+    void get_available_media();
 };
 #endif // MAINWINDOW_H

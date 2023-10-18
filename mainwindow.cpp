@@ -58,9 +58,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(ui->media_in_current_lib, &QTableWidget::customContextMenuRequested, [=](const QPoint& pos)
     {
-        media_lib_index = ui->media_in_current_lib->indexAt(pos);
+        media_index = ui->media_in_current_lib->indexAt(pos);
 
-        qDebug() << media_lib_index << "      "  << ui->media_in_current_lib->indexAt(pos);
+        qDebug() << media_index << "      "  << ui->media_in_current_lib->indexAt(pos);
 
         QMenu rightClickMenu(ui->media_in_current_lib);
         rightClickMenu.addAction(pAddAction);
@@ -220,14 +220,6 @@ void MainWindow::on_pushButton_Seek_Forward_clicked()
 
 void MainWindow::on_pushButton_Seek_Backward_clicked()
 {
-
-    /*if(Play_list_index-1 >= 0)
-    {
-        Playlist->previous();
-        Play_list_index--;
-    }
-
-    ui->play_list->item(Play_list_index)->setSelected(true);*/
     Playlist->previous();
     ui->play_list->item(Playlist->currentIndex())->setSelected(true);
 }
@@ -348,12 +340,12 @@ void MainWindow::add_from_lib_to_playlist()
     QString qry_res;
     QSqlQuery qry;
 
-    qDebug() << media_lib_index.data().toString();
+    qDebug() << media_index.data().toString();
 
     if(media_libs.open())
     {
         qry.prepare("select distinct path from media where name = :nm");
-        qry.bindValue(":nm", media_lib_index.data().toString());
+        qry.bindValue(":nm", media_index.data().toString());
         if(qry.exec())
             qDebug() << "qry executed";
     }
@@ -379,3 +371,7 @@ void MainWindow::add_from_lib_to_playlist()
     }
 }
 
+void MainWindow::get_available_media()
+{
+
+}
