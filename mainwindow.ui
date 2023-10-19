@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>930</width>
-    <height>525</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>15</x>
       <y>15</y>
       <width>591</width>
-      <height>341</height>
+      <height>361</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -37,7 +37,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>420</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -50,7 +50,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>400</y>
+      <y>420</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -63,7 +63,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>400</y>
+      <y>420</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -76,7 +76,7 @@
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>400</y>
+      <y>420</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -89,7 +89,7 @@
     <property name="geometry">
      <rect>
       <x>430</x>
-      <y>400</y>
+      <y>420</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>420</y>
+      <y>440</y>
       <width>121</width>
       <height>16</height>
      </rect>
@@ -115,7 +115,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
+      <y>390</y>
       <width>601</width>
       <height>19</height>
      </rect>
@@ -130,11 +130,11 @@
       <x>620</x>
       <y>10</y>
       <width>291</width>
-      <height>441</height>
+      <height>461</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -145,8 +145,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
-        <height>421</height>
+        <width>285</width>
+        <height>441</height>
        </rect>
       </property>
      </widget>
@@ -160,8 +160,8 @@
        <rect>
         <x>0</x>
         <y>180</y>
-        <width>291</width>
-        <height>201</height>
+        <width>285</width>
+        <height>231</height>
        </rect>
       </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
@@ -173,7 +173,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
+        <width>285</width>
         <height>141</height>
        </rect>
       </property>
@@ -198,8 +198,8 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>390</y>
-        <width>281</width>
+        <y>410</y>
+        <width>151</width>
         <height>23</height>
        </rect>
       </property>
@@ -243,38 +243,35 @@
        <string/>
       </property>
      </widget>
+     <widget class="QPushButton" name="search_media">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>410</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Search</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
       <string>Available media</string>
      </attribute>
-     <widget class="QTableView" name="available_media">
+     <widget class="QListWidget" name="availabe_media">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>291</width>
-        <height>421</height>
+        <width>285</width>
+        <height>441</height>
        </rect>
       </property>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>260</number>
-      </attribute>
      </widget>
     </widget>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>460</y>
-      <width>441</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

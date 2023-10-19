@@ -44,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     Playlist = new QMediaPlaylist(Player);
 
+    trd = new Media_thread();
+    connect(trd, SIGNAL(get_available_media(QString)), this, SLOT(on_get_available_media(QString)));
+    trd->start();
+
     connect(Player, &QMediaPlayer::durationChanged, ui->horizontalSlider, &QSlider::setMaximum);
     connect(Player, &QMediaPlayer::positionChanged, ui->horizontalSlider, &QSlider::setValue);
     connect(ui->horizontalSlider, &QSlider::sliderMoved, Player, &QMediaPlayer::setPosition);
@@ -69,12 +73,28 @@ MainWindow::MainWindow(QWidget *parent)
 
      });
 
-    connect(pAddAction, &QAction::triggered, [&](){qDebug() << "add to playlis"; add_from_lib_to_playlist();});
+    connect(pAddAction, &QAction::triggered, [&](){qDebug() << "add to playlist"; add_from_lib_to_playlist();});
     connect(pDelAction, &QAction::triggered, [&](){qDebug() << "Delete from library";});
+
+    ui->availabe_media->setContextMenuPolicy(Qt::CustomContextMenu);
+    QAction *pAddMedia= new QAction("Add to playlist",this);
+    QObject::connect(ui->availabe_media, &QListWidget::customContextMenuRequested, [=](const QPoint& pos)
+    {
+        media_index = ui->availabe_media->indexAt(pos);
+
+        qDebug() << media_index << "      "  << ui->availabe_media->indexAt(pos);
+
+        QMenu rightClickMenu(ui->media_in_current_lib);
+        rightClickMenu.addAction(pAddMedia);
+        rightClickMenu.exec(ui->availabe_media->viewport()->mapToGlobal(pos));
+     });
+     connect(pAddMedia, &QAction::triggered, [&](){qDebug() << "add to playlist"; add_to_playlist(media_index.data().toString());});
 }
+
 
 MainWindow::~MainWindow()
 {
+    trd->stop = true;
     delete ui;
 }
 
@@ -97,20 +117,6 @@ void MainWindow::onCurrentMusicIndexChanged()
 
 void MainWindow::on_actionOpen_video_triggered()
 {
-    /*QString File_Name = QFileDialog::getOpenFileName(this, tr("Select Video File"), "", tr("MP4 Files (*.mp4)"));
-
-    Video = new QVideoWidget();
-    Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
-    Video->setParent(ui->groupBox_Video);
-    Player->setVideoOutput(Video);
-    #ifdef _WIN32
-        Player->setMedia(QUrl(File_Name));
-    #elif __linux__
-        Player->setMedia(QUrl("file:"%File_Name));
-    #endif
-    Video->setVisible(true);
-        Video->show();*/
-
     Playlist->clear();
     ui->play_list->clear();
     Play_list_index = 0;
@@ -334,6 +340,25 @@ void MainWindow::on_new_lib_add_cancel_clicked()
     ui->Add_library->setEnabled(true);
 }
 
+void MainWindow::add_to_playlist(QString qry_res)
+{
+    Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(qry_res)));
+    QFileInfo* fi = new QFileInfo(QUrl::fromLocalFile(qry_res).toString());
+    ui->play_list->addItem(fi->fileName());
+    Play_list_size++;
+    Player->setPlaylist(Playlist);
+
+    if((qry_res.toStdString()).substr((qry_res.toStdString()).find_last_of(".") + 1) == "mp4")
+    {
+        Video = new QVideoWidget();
+        Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
+        Video->setParent(ui->groupBox_Video);
+        Player->setVideoOutput(Video);
+        Video->setVisible(true);
+        Video->show();
+    }
+}
+
 
 void MainWindow::add_from_lib_to_playlist()
 {
@@ -354,24 +379,14 @@ void MainWindow::add_from_lib_to_playlist()
     qDebug() << qry_res;
     media_libs.close();
 
-    Playlist->addMedia(QMediaContent(QUrl::fromLocalFile(qry_res)));
-    QFileInfo* fi = new QFileInfo(QUrl::fromLocalFile(qry_res).toString());
-    ui->play_list->addItem(fi->fileName());
-    Play_list_size++;
-    Player->setPlaylist(Playlist);
-
-    if((qry_res.toStdString()).substr((qry_res.toStdString()).find_last_of(".") + 1) == "mp4")
-    {
-        Video = new QVideoWidget();
-        Video->setGeometry(5, 5, ui->groupBox_Video->width()-10, ui->groupBox_Video->height()-10);
-        Video->setParent(ui->groupBox_Video);
-        Player->setVideoOutput(Video);
-        Video->setVisible(true);
-        Video->show();
-    }
+    add_to_playlist(qry_res);
 }
 
-void MainWindow::get_available_media()
+
+void MainWindow::on_get_available_media(QString file)
 {
-
+    ui->availabe_media->addItem(file);
 }
+
+
+

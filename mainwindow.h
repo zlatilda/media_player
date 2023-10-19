@@ -18,6 +18,7 @@
 #include <QSqlError>
 #include <QFileInfo>
 #include <string>
+#include "media_thread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,6 +31,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    Media_thread* trd;
+    //static void get_available_media();
+
+public slots:
+    void on_get_available_media(QString file);
 
 private slots:
 
@@ -82,6 +89,6 @@ private:
     void show_media_libs();
     void show_media_in_curr_lib(QString cellText);
     void add_from_lib_to_playlist();
-    void get_available_media();
+    void add_to_playlist(QString qry_res);
 };
 #endif // MAINWINDOW_H
