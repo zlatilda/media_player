@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->new_lib_input->setVisible(false);
     ui->save_new_lib->setVisible(false);
     ui->new_lib_add_cancel->setVisible(false);
+    ui->search_media->setEnabled(false);
+    ui->search_text_edit->setVisible(false);
+    ui->search_cancel->setVisible(false);
+    ui->search->setVisible(false);
 
     Player = new QMediaPlayer();
 
@@ -35,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_Volume->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
     ui->save_new_lib->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
     ui->new_lib_add_cancel->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
+    ui->search_cancel->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton));
 
     ui->horizontalSlider_Volume->setMinimum(0);
     ui->horizontalSlider_Volume->setMaximum(100);
@@ -89,13 +94,18 @@ MainWindow::MainWindow(QWidget *parent)
         rightClickMenu.exec(ui->availabe_media->viewport()->mapToGlobal(pos));
      });
 
+#ifdef _WIN64
      connect(pAddMedia, &QAction::triggered, [&](){qDebug() << "add to playlist"; add_to_playlist(media_index.data().toString());});
+
+#elif __linux
+     connect(pAddMedia, &QAction::triggered, [&](){qDebug() << media_index.data().toString().remove(0, 1); add_to_playlist(media_index.data().toString().remove(0, 1));});
+#endif
 }
 
 
 MainWindow::~MainWindow()
 {
-    trd->stop = true;
+    trd->exit();;
     delete ui;
 }
 
@@ -107,6 +117,7 @@ void MainWindow::onTableClicked(const QModelIndex &index)
         QString cellText = index.data().toString();
         show_media_in_curr_lib(cellText);
         ui->Add_media->setEnabled(true);
+        ui->search_media->setEnabled(true);
     }
 }
 
@@ -389,5 +400,42 @@ void MainWindow::on_get_available_media(QString file)
     ui->availabe_media->addItem(file);
 }
 
+void MainWindow::on_search_media_clicked()
+{
+    ui->search_text_edit->setVisible(true);
+    ui->search_cancel->setVisible(true);
+    ui->search->setVisible(true);
+    ui->search_media->setEnabled(false);
+}
 
+
+void MainWindow::on_search_cancel_clicked()
+{
+    ui->search_text_edit->setVisible(false);
+    ui->search_text_edit->clear();
+    ui->search_cancel->setVisible(false);
+    ui->search->setVisible(false);
+    ui->search_media->setEnabled(true);
+    show_media_in_curr_lib(media_lib_index.data().toString());
+}
+
+
+void MainWindow::on_search_clicked()
+{
+    QSqlQuery qry;
+    if(media_libs.open())
+    {
+        qry.prepare("select distinct name from media where name like '%"%ui->search_text_edit->toPlainText()%"%' and lib_name = :lbnm");
+        qry.bindValue(":lbnm", media_lib_index.data().toString());
+        qry.exec();
+    }
+
+    QSqlQueryModel* modal = new QSqlQueryModel();
+    modal->setQuery(qry);
+
+    ui->media_in_current_lib->setModel(modal);
+
+    media_libs.close();
+
+}
 

@@ -10,11 +10,11 @@ class Media_thread : public QThread
 public:
     explicit Media_thread(QObject *parent = nullptr);
     void run();
-    bool stop;
+    void get_available_media_linux(const char* dirname);
+    void get_available_media_windows();
 
 signals:
-    void get_available_media_linux(const char* dirname);
-    void get_available_media_windows(const char* dirname);
+
     void get_available_media(QString file);
 };
 

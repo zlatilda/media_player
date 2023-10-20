@@ -68,6 +68,12 @@ private slots:
 
     void on_new_lib_add_cancel_clicked();
 
+    void on_search_media_clicked();
+
+    void on_search_cancel_clicked();
+
+    void on_search_clicked();
+
 private:
     Ui::MainWindow* ui;
     QMediaPlayer* Player;
