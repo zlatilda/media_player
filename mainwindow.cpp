@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
         rightClickMenu.addAction(pAddMedia);
         rightClickMenu.exec(ui->availabe_media->viewport()->mapToGlobal(pos));
      });
+
      connect(pAddMedia, &QAction::triggered, [&](){qDebug() << "add to playlist"; add_to_playlist(media_index.data().toString());});
 }
 

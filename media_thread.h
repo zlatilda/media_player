@@ -13,6 +13,8 @@ public:
     bool stop;
 
 signals:
+    void get_available_media_linux(const char* dirname);
+    void get_available_media_windows(const char* dirname);
     void get_available_media(QString file);
 };
 
