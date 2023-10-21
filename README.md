@@ -79,7 +79,7 @@ Other functions:
 MEDIA THREAD CLASS
 
 Description
-The constructor for the Media_thread class, which initializes the media discovery thread.
+- The constructor for the Media_thread class, which initializes the media discovery thread.
 
 Public member variables
 - Media_thread* trd = new Media_thread(this) : A pointer to the parent QObject. Default is nullptr.
