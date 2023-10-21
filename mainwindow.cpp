@@ -105,7 +105,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    trd->exit();;
+    trd->exit();
+    delete Player;
+    delete Video;
+    delete Audio;
+    delete Playlist;
     delete ui;
 }
 
@@ -254,18 +258,21 @@ void MainWindow::on_Add_media_clicked()
     fi = new QFileInfo(QUrl::fromLocalFile(path).toString());
     QString name = fi->fileName();
 
-    QSqlQuery qry;
-    if(media_libs.open())
+    if(name != "")
     {
-        qry.prepare("insert into media(id, path, name, lib_name) values(:id, :path, :name, :lib_name)");
-        qry.bindValue(":id", id);
-        qry.bindValue(":path", path);
-        qry.bindValue(":name", name);
-        qry.bindValue(":lib_name", lib_name);
-        qry.exec();
-    }
+        QSqlQuery qry;
+        if(media_libs.open())
+        {
+            qry.prepare("insert into media(id, path, name, lib_name) values(:id, :path, :name, :lib_name)");
+            qry.bindValue(":id", id);
+            qry.bindValue(":path", path);
+            qry.bindValue(":name", name);
+            qry.bindValue(":lib_name", lib_name);
+            qry.exec();
+        }
 
-    media_libs.close();
+        media_libs.close();
+    }
     show_media_in_curr_lib(lib_name);
 }
 

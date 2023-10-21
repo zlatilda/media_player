@@ -82,8 +82,6 @@ private:
     bool is_Pause = true;
     bool is_Muted = false;
     QMediaPlaylist * Playlist;
-    QDir m_musicPath;
-    QVariantList _music;
     int Play_list_index;
     int Play_list_size;
     QSqlDatabase media_libs;
