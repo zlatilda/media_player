@@ -34,9 +34,9 @@ Public Member Variables
 Media_thread* trd: A pointer to the Media_thread class, which is responsible for discovering available media files.
 
 Private Member Variables
--Ui::MainWindow* ui: User interface elements managed by Qt Designer.
--QMediaPlayer* Player: The media player for playback.
--QVideoWidget* Video: Video widget for video playback.
+- Ui::MainWindow* ui: User interface elements managed by Qt Designer.
+- QMediaPlayer* Player: The media player for playback.
+- QVideoWidget* Video: Video widget for video playback.
 -QAudioOutput* Audio: Audio output for audio playback.
 -bool is_Pause: Indicates whether media playback is paused.
 -bool is_Muted: Indicates whether media is muted.
