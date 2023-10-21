@@ -22,16 +22,16 @@ The application is built using Qt for UI and standard C/C++ libraries.
 MAIN WINDOW CLASS
 
 Description
-The MainWindow class provides the main application window for managing media playback, libraries, and playlists.
+- The MainWindow class provides the main application window for managing media playback, libraries, and playlists.
 
 Constructor
-MainWindow(QWidget* parent = nullptr): The constructor for the MainWindow class. It initializes the main window and sets up the user interface elements.
+- MainWindow(QWidget* parent = nullptr): The constructor for the MainWindow class. It initializes the main window and sets up the user interface elements.
 
 Destructor
-~MainWindow(): The destructor for the MainWindow class. It cleans up resources and handles application shutdown.
+- ~MainWindow(): The destructor for the MainWindow class. It cleans up resources and handles application shutdown.
 
 Public Member Variables
-Media_thread* trd: A pointer to the Media_thread class, which is responsible for discovering available media files.
+- Media_thread* trd: A pointer to the Media_thread class, which is responsible for discovering available media files.
 
 Private Member Variables
 - Ui::MainWindow* ui: User interface elements managed by Qt Designer.
