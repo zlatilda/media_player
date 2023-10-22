@@ -16,8 +16,9 @@ Application does the following:
 - Compiles for Linux and Windows;
 - Non-blocking UI – does not freeze while using the app;
 
-The application is built using Qt for UI and standard C/C++ libraries.
+The application is built using Qt for UI and standard C/C++ libraries, SQLite for the database.
 
+Database schema: table media(id integer primary key, path text, name text, lib_name text).
 
 MAIN WINDOW CLASS
 
@@ -91,3 +92,6 @@ Public functions
  
 Signals
 - get_available_media(QString file): A signal emitted when a new media file is discovered during media discovery. It sends the file path as a QString.
+
+  <img width="5056" alt="Untitled" src="https://github.com/zlatilda/media_player/assets/43010223/ee627be3-416b-42db-aba0-087609905bef">
+
